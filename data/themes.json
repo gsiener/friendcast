@@ -1,8 +1,12 @@
 [
   { "slug": "big-picture", "name": "The big picture", "blurb": "Long conversations about where AI is going and what it does to everything else." },
+  { "slug": "building", "name": "Coding with agents", "blurb": "How people actually work with coding agents: workflows, habits, and software factories." },
+  { "slug": "new-in-claude", "name": "New in Claude", "blurb": "Claude and Claude Code features worth knowing about, straight from the people who shipped them." },
+  { "slug": "launches", "name": "New tools and models", "blurb": "Sandboxes, harnesses, open models, and other things to try this week." },
+  { "slug": "demos", "name": "Look what it made", "blurb": "Games, worlds, and gadgets built by an agent, often in one prompt." },
   { "slug": "misbehaving", "name": "When models misbehave", "blurb": "Rogue models, leaked incidents, and what chain of thought might be hiding." },
-  { "slug": "building", "name": "Building with agents", "blurb": "How people are actually making things with AI right now." },
-  { "slug": "industry", "name": "Inside the AI industry", "blurb": "The labs, the launches, the hype, and the people running on fumes." },
-  { "slug": "movement", "name": "In motion", "blurb": "Running, riding, racquets, and robots. We are a running club, after all." },
+  { "slug": "industry", "name": "Inside the AI industry", "blurb": "The labs, the money, the hype, and the people running on fumes." },
+  { "slug": "humor", "name": "Agent humor", "blurb": "Memes from people who spend all day talking to a terminal." },
+  { "slug": "movement", "name": "In motion", "blurb": "Running, riding, racquets, and robots. One of these chats is a running club, after all." },
   { "slug": "odd", "name": "Delightfully odd", "blurb": "Everything else that made the chat stop and stare." }
 ]

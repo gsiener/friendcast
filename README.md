@@ -20,6 +20,11 @@ iMessage group chat ──► scripts/import-imessage.mjs ──► data/recs.js
   - Videos: YouTube, Vimeo
   - Clips: YouTube Shorts, TikTok, Instagram reels, and X posts that contain video (checked via fxtwitter)
 - **Other chats (Signal, WhatsApp, Slack…)**: paste or export the messages as text and run `pbpaste | npm run import:text -- --source "Group name"`. Lines starting with a date (`2026-10-14 09:30`) date the links that follow.
+- **Signal**: the desktop database is encrypted, so export it yourself (macOS asks for Keychain access), import, then delete the plaintext export:
+  ```sh
+  uvx --from signal-export sigexport ~/signal-export --chats "Gotham AI Nerds (GAIN)"
+  npm run import:text -- --source "Gotham AI Nerds (GAIN)" --file ~/signal-export/GothamAINerdsGAIN/chat.md
+  ```
 - **Themes** live in `data/themes.json`; each rec has a `theme` slug. New recs show up under "Just in" until you give them one.
 - Tapback reactions on a link are counted and shown as ♥.
 - **Privacy:** the repo is public, so only the link and its public metadata are stored. Phone numbers and message text are never written. To credit people, copy `people.local.example.json` to `people.local.json` (gitignored) and map handles to first names.

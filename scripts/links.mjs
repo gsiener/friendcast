@@ -9,6 +9,10 @@ export function normalizeUrl(raw) {
     const u = new URL(raw.replace(/[).,;!?]+$/, ''));
     for (const k of [...u.searchParams.keys()]) if (TRACKING.test(k)) u.searchParams.delete(k);
     u.hostname = u.hostname.replace(/^(www|m|mobile)\./, '').replace(/^twitter\.com$/, 'x.com');
+    if (u.hostname === 'podcasts.apple.com' && u.searchParams.get('i')) {
+      // Same episode is linked with or without a slug; keep just the ids.
+      return `https://podcasts.apple.com/podcast/${u.pathname.match(/id\d+/)?.[0]}?i=${u.searchParams.get('i')}`;
+    }
     if (u.hostname === 'youtu.be') {
       const t = u.searchParams.get('t');
       return `https://youtube.com/watch?v=${u.pathname.slice(1)}${t ? `&t=${t}` : ''}`;
@@ -47,6 +51,7 @@ export async function enrich(url, kind) {
   if (host === 'youtube.com') return youtube(url, kind);
   if (host === 'x.com') return xPost(url);
   if (host === 'open.spotify.com') return oembed(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, kind, 'Spotify');
+  if (host === 'tiktok.com') return oembed(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`, kind, 'TikTok');
   if (host === 'vimeo.com') return oembed(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(url)}`, kind, 'Vimeo');
   return openGraph(url, kind);
 }
@@ -91,7 +96,7 @@ async function xPost(url) {
   const video = tweet?.media?.videos?.[0];
   if (!video) return null;
   const text = tweet.text.replace(/\s*https:\/\/t\.co\/\S+$/, '');
-  const line = text.replace(/\s+/g, ' ').trim();
+  const line = text.replace(/\s+/g, ' ').trim() || `Video from ${tweet.author.name}`;
   return {
     kind: 'clip',
     title: line.length > 120 ? `${line.slice(0, 117).trimEnd()}…` : line,
@@ -127,4 +132,7 @@ async function openGraph(url, kind) {
 const decode = (s) =>
   s.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&(mdash|ndash|rsquo|lsquo|rdquo|ldquo|hellip|nbsp);/g, (_, n) => NAMED[n])
     .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+const NAMED = { mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', hellip: '…', nbsp: ' ' };

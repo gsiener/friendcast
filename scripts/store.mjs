@@ -24,6 +24,8 @@ export async function ingest(shares, { source, refresh = false }) {
   const byId = new Map(recs.map((r) => [r.id, r]));
   let added = 0;
 
+  // First share of each link wins (shares arrive oldest first).
+  const todo = new Map();
   for (const share of shares) {
     const url = normalizeUrl(share.url);
     const kind = url && classify(url);
@@ -34,11 +36,21 @@ export async function ingest(shares, { source, refresh = false }) {
       existing.reactions = Math.max(existing.reactions || 0, share.reactions || 0);
       continue;
     }
+    if (!todo.has(id)) todo.set(id, { ...share, url, kind, id, existing });
+  }
+
+  const queue = [...todo.values()];
+  const worker = async () => {
+    for (let s; (s = queue.shift()); ) await add(s);
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+
+  async function add({ url, kind, id, existing, ...share }) {
     const meta = await enrich(url, kind).catch((e) => {
       console.warn(`  ! ${url}: ${e.message}`);
       return null;
     });
-    if (!meta) continue; // e.g. an X post with no video isn't a clip
+    if (!meta) return; // e.g. an X post with no video isn't a clip
     const rec = {
       id,
       url,
