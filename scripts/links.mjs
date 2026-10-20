@@ -105,6 +105,7 @@ async function xPost(url) {
     image: video.thumbnail_url,
     published: new Date(tweet.created_timestamp * 1000).toISOString(),
     durationSec: Math.round(video.duration),
+    videoUrl: video.url,
     platform: 'X',
   };
 }

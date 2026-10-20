@@ -26,6 +26,7 @@ iMessage group chat ──► scripts/import-imessage.mjs ──► data/recs.js
   npm run import:text -- --source "Gotham AI Nerds (GAIN)" --file ~/signal-export/GothamAINerdsGAIN/chat.md
   ```
 - **Themes** live in `data/themes.json`; each rec has a `theme` slug. New recs show up under "Just in" until you give them one.
+- **On the page**: podcasts, YouTube, Spotify, Vimeo and X videos play in an on-page player (X video files are loaded with no referrer, which X requires). Search, the kind filter and expanded topics are kept in the URL, e.g. `/?kind=podcast&open=building`.
 - Tapback reactions on a link are counted and shown as ♥.
 - **Privacy:** the repo is public, so only the link and its public metadata are stored. Phone numbers and message text are never written. To credit people, copy `people.local.example.json` to `people.local.json` (gitignored) and map handles to first names.
 - `data/recs.json` is the source of truth. Edit it by hand to fix titles, remove items, or add a `note`.

@@ -76,20 +76,62 @@ function item(r) {
 
 // ── Page ─────────────────────────────────────────────────────────────
 
+const LATEST = 8;
 const sections = [
   { slug: 'just-in', name: 'Just in', blurb: 'New to the feed and not sorted yet.', items: recs.filter((r) => !themes.some((t) => t.slug === r.theme)) },
   ...themes.map((t) => ({ ...t, items: recs.filter((r) => r.theme === t.slug) })),
 ].filter((s) => s.items.length);
 
+// How a rec plays in the on-page player, if it can.
+function player(r) {
+  const u = new URL(r.url);
+  if (r.enclosure) return { type: r.enclosure.type.startsWith('video') ? 'video' : 'audio', src: r.enclosure.url };
+  if (r.videoUrl) return { type: 'video', src: r.videoUrl };
+  if (u.hostname === 'youtube.com') {
+    const id = u.searchParams.get('v') || u.pathname.split('/')[2];
+    const start = parseInt(u.searchParams.get('t'), 10);
+    return id && { type: 'embed', src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1${start ? `&start=${start}` : ''}` };
+  }
+  const spotify = u.hostname === 'open.spotify.com' && u.pathname.match(/^\/(episode|show)\/(\w+)/);
+  if (spotify) return { type: 'embed', src: `https://open.spotify.com/embed/${spotify[1]}/${spotify[2]}`, audio: true };
+  if (u.hostname === 'vimeo.com') return { type: 'embed', src: `https://player.vimeo.com/video/${u.pathname.slice(1)}?autoplay=1` };
+  return null;
+}
+
 function card(r) {
-  const meta = [r.show, duration(r.durationSec)].filter(Boolean).map(esc).join(' · ');
-  return `<li class="card" data-kind="${r.kind}">
+  const p = player(r);
+  const len = duration(r.durationSec);
+  const data = [
+    `data-kind="${r.kind}"`,
+    `data-q="${esc(`${r.title} ${r.show || ''} ${r.platform}`.toLowerCase())}"`,
+    p && `data-play="${p.type}" data-src="${esc(p.src)}"${p.audio ? ' data-audio' : ''}`,
+    `data-title="${esc(r.title)}" data-show="${esc(r.show || '')}" data-platform="${esc(r.platform)}"${r.image ? ` data-image="${esc(r.image)}"` : ''}`,
+  ].filter(Boolean).join(' ');
+  const foot = `<p class="foot"><span>${esc(r.platform)}</span><span>${r.sharedBy ? `${esc(r.sharedBy)} · ` : ''}${day(r.sharedAt)}${r.reactions ? ` · <span class="hearts" title="${r.reactions} reactions">♥ ${r.reactions}</span>` : ''}</span></p>`;
+
+  // Podcasts lead with the episode, not the (often repeated) show artwork.
+  if (r.kind === 'podcast') {
+    return `<li class="card podcast" ${data}>
   <a href="${esc(r.url)}" target="_blank" rel="noopener">
-    <div class="thumb ${r.kind}">${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy">` : ''}<span class="badge">${KIND_LABEL[r.kind]}</span></div>
+    <div class="pod-head">
+      ${r.image ? `<img class="art" src="${esc(r.image)}" alt="" loading="lazy">` : '<span class="art"></span>'}
+      <div><span class="badge">${p ? '▶ ' : ''}Podcast${len ? ` · ${len}` : ''}</span><p class="meta">${esc(r.show || r.platform)}</p></div>
+    </div>
     <div class="body">
       <h3>${esc(r.title)}</h3>
-      ${meta ? `<p class="meta">${meta}</p>` : ''}
-      <p class="foot"><span>${esc(r.platform)}</span><span>${r.sharedBy ? `${esc(r.sharedBy)} · ` : ''}${day(r.sharedAt)}${r.reactions ? ` · <span class="hearts" title="${r.reactions} reactions">♥ ${r.reactions}</span>` : ''}</span></p>
+      ${r.description ? `<p class="desc">${esc(r.description)}</p>` : ''}
+      ${foot}
+    </div>
+  </a>
+</li>`;
+  }
+  return `<li class="card ${r.kind}" ${data}>
+  <a href="${esc(r.url)}" target="_blank" rel="noopener">
+    <div class="thumb">${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy">` : ''}<span class="badge">${KIND_LABEL[r.kind]}</span>${len ? `<span class="len">${p ? '▶ ' : ''}${len}</span>` : p ? '<span class="len">▶</span>' : ''}</div>
+    <div class="body">
+      <h3>${esc(r.title)}</h3>
+      ${r.show ? `<p class="meta">${esc(r.show)}</p>` : ''}
+      ${foot}
     </div>
   </a>
 </li>`;
@@ -102,6 +144,7 @@ const page = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
 <title>${TITLE} · Friend Recs</title>
 <meta name="description" content="${esc(TAGLINE)}">
 <meta property="og:title" content="${TITLE}">
@@ -112,14 +155,14 @@ ${FEEDS.map((f) => `<link rel="alternate" type="application/rss+xml" title="${es
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script>
 </head>
 <body>
 <header class="hero">
   <div class="wrap">
     <p class="eyebrow">🏃 friend recs</p>
     <h1>${TITLE}</h1>
-    <p class="tagline">${esc(TAGLINE)}</p>
-    <p class="sources">From ${esc(list(sources))}.</p>
+    <p class="tagline">${esc(TAGLINE)} <span class="sources">From ${esc(list(sources))}.</span></p>
     <div class="subscribe">
       <a class="btn primary" href="/feed.xml">Subscribe via RSS</a>
       <a class="btn" href="/podcasts.xml">Podcasts only</a>
@@ -127,14 +170,26 @@ ${FEEDS.map((f) => `<link rel="alternate" type="application/rss+xml" title="${es
     </div>
   </div>
 </header>
+<div class="controls">
+  <div class="wrap">
+    <input type="search" id="q" placeholder="Search ${recs.length} recs" aria-label="Search recommendations" autocomplete="off">
+    <div class="chips" role="group" aria-label="Show">
+      ${FEEDS.map((f, i) => `<button type="button" class="chip" aria-pressed="${!i}" data-filter="${i ? f.kinds[0] : 'all'}">${f.label} <span>${counts[f.label]}</span></button>`).join('\n      ')}
+    </div>
+  </div>
+</div>
 <main class="wrap">
   <nav class="topics" aria-label="Topics">
     ${sections.map((s) => `<a href="#${s.slug}">${esc(s.name)} <span>${s.items.length}</span></a>`).join('\n    ')}
   </nav>
-  <nav class="filters" aria-label="Filter recommendations">
-    ${FEEDS.map((f, i) => `<button class="chip${i ? '' : ' on'}" data-filter="${i ? f.kinds[0] : 'all'}">${f.label} <span>${counts[f.label]}</span></button>`).join('\n    ')}
-  </nav>
-${sections.map((s) => `  <section id="${s.slug}">
+  <section id="latest" class="latest">
+    <h2>Latest</h2>
+    <p class="blurb">The most recent shares from every group.</p>
+    <ul class="rail">
+${recs.slice(0, LATEST).map(card).join('\n')}
+    </ul>
+  </section>
+${sections.map((s) => `  <section id="${s.slug}" class="topic">
     <h2>${esc(s.name)}</h2>
     <p class="blurb">${esc(s.blurb)}</p>
     <ul class="grid">
@@ -142,44 +197,23 @@ ${s.items.map(card).join('\n')}
     </ul>
     <button class="more" type="button" hidden>Show all</button>
   </section>`).join('\n')}
+  <p class="empty" hidden>Nothing matches that search. Try a show, a person, or a topic like “agents”.</p>
 </main>
 <footer class="wrap">
   <p>Feeds: ${FEEDS.map((f) => `<a href="/${f.file}">${f.file}</a>`).join(' · ')}</p>
   <p>Updated ${day(new Date().toISOString())} · ${recs.length} recommendations · <a href="https://github.com/gsiener/friendcast">Source</a></p>
 </footer>
-<script>
-const PREVIEW = 6;
-let filter = 'all';
-function render() {
-  document.querySelectorAll('main section').forEach((s) => {
-    const open = s.classList.contains('open');
-    const matches = [...s.querySelectorAll('.card')].filter((c) => filter === 'all' || c.dataset.kind === filter);
-    s.querySelectorAll('.card').forEach((c) => (c.hidden = true));
-    matches.forEach((c, i) => (c.hidden = !open && i >= PREVIEW));
-    s.hidden = !matches.length;
-    const more = s.querySelector('.more');
-    more.hidden = matches.length <= PREVIEW;
-    more.textContent = open ? 'Show fewer' : 'Show all ' + matches.length;
-    more.setAttribute('aria-expanded', open);
-  });
-}
-document.querySelectorAll('.more').forEach((b) => b.addEventListener('click', () => {
-  const s = b.closest('section');
-  s.classList.toggle('open');
-  render();
-  if (!s.classList.contains('open')) s.scrollIntoView({ block: 'start' });
-}));
-document.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
-  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c === chip));
-  filter = chip.dataset.filter;
-  render();
-}));
-render();
-document.getElementById('copy').addEventListener('click', async (e) => {
-  try { await navigator.clipboard.writeText(e.target.dataset.url); e.target.textContent = 'Copied!'; }
-  catch { location.href = e.target.dataset.url; }
-});
-</script>
+<dialog id="player" aria-labelledby="player-title">
+  <div class="player-head">
+    <div>
+      <p class="meta" id="player-show"></p>
+      <h2 id="player-title"></h2>
+    </div>
+    <button type="button" class="close" aria-label="Close player">✕</button>
+  </div>
+  <div class="stage"></div>
+  <a class="open-out" href="/" target="_blank" rel="noopener"></a>
+</dialog>
 </body>
 </html>
 `;
