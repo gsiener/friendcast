@@ -5,6 +5,7 @@
   "description": "RSS feed + landing page of podcast, video, and clip recs from friends",
   "scripts": {
     "import": "node scripts/import-imessage.mjs --chat Frontier Pacers",
+    "import:text": "node scripts/import-text.mjs",
     "build": "node scripts/build.mjs",
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy"

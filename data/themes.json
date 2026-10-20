@@ -1,0 +1,8 @@
+[
+  { "slug": "big-picture", "name": "The big picture", "blurb": "Long conversations about where AI is going and what it does to everything else." },
+  { "slug": "misbehaving", "name": "When models misbehave", "blurb": "Rogue models, leaked incidents, and what chain of thought might be hiding." },
+  { "slug": "building", "name": "Building with agents", "blurb": "How people are actually making things with AI right now." },
+  { "slug": "industry", "name": "Inside the AI industry", "blurb": "The labs, the launches, the hype, and the people running on fumes." },
+  { "slug": "movement", "name": "In motion", "blurb": "Running, riding, racquets, and robots. We are a running club, after all." },
+  { "slug": "odd", "name": "Delightfully odd", "blurb": "Everything else that made the chat stop and stare." }
+]

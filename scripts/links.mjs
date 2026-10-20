@@ -57,7 +57,14 @@ async function applePodcast(url) {
   const ep = Number(u.searchParams.get('i'));
   const { results } = await json(`https://itunes.apple.com/lookup?id=${show}&entity=podcastEpisode&limit=200`);
   const e = results.find((r) => r.trackId === ep);
-  if (!e) return openGraph(url, 'podcast');
+  if (!e) {
+    // Older or subscriber-only episodes: the page description reads
+    // "Podcast Episode · <show> · <date> · … · 1h 48m".
+    const og = await openGraph(url, 'podcast');
+    const parts = og?.description?.split(' · ') ?? [];
+    const [, h, m] = parts.at(-1)?.match(/^(?:(\d+)h)?\s*(?:(\d+)m)?$/) ?? [];
+    return og && { ...og, description: undefined, show: parts[1], durationSec: (h || m) ? (h || 0) * 3600 + (m || 0) * 60 : undefined, platform: 'Apple Podcasts' };
+  }
   return {
     kind: 'podcast',
     title: e.trackName,
@@ -73,7 +80,9 @@ async function applePodcast(url) {
 
 async function youtube(url, kind) {
   const o = await json(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`);
-  return { kind, title: o.title, show: o.author_name, image: o.thumbnail_url, platform: 'YouTube' };
+  const page = await (await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0' } })).text().catch(() => '');
+  const sec = Number(page.match(/"lengthSeconds":"(\d+)"/)?.[1]) || undefined;
+  return { kind, title: o.title, show: o.author_name, image: o.thumbnail_url, durationSec: sec, platform: 'YouTube' };
 }
 
 async function xPost(url) {
@@ -106,6 +115,12 @@ async function openGraph(url, kind) {
     html.match(new RegExp(`<meta[^>]+(?:property|name)=["']og:${p}["'][^>]+content=["']([^"']*)`, 'i'))?.[1];
   const title = og('title') || html.match(/<title>([^<]*)/i)?.[1];
   if (!title) return null;
+  // Instagram titles look like: Name on Instagram: "caption #tags"
+  const ig = decode(title).match(/^(.+?) on Instagram: "([\s\S]*?)"?$/);
+  if (ig) {
+    const caption = ig[2].replace(/#\S+/g, '').replace(/\s+/g, ' ').trim() || 'Instagram reel';
+    return { kind, title: caption, show: ig[1], image: og('image') && decode(og('image')), platform: 'Instagram' };
+  }
   return { kind, title: decode(title), description: og('description') && decode(og('description')), image: og('image'), platform: og('site_name') || new URL(url).hostname };
 }
 

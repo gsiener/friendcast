@@ -6,25 +6,13 @@
 //   node scripts/import-imessage.mjs --chat "Frontier Pacers" [--since 2026-01-01] [--refresh]
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { classify, enrich, normalizeUrl, recId } from './links.mjs';
+import { URL_RE, ingest, parseArgs, people } from './store.mjs';
 
-const args = Object.fromEntries(
-  process.argv.slice(2).join(' ').split('--').filter(Boolean).map((a) => {
-    const [k, ...v] = a.trim().split(' ');
-    return [k, v.join(' ') || true];
-  }),
-);
+const args = parseArgs(process.argv.slice(2));
 const chatName = args.chat || 'Frontier Pacers';
 const DB = join(homedir(), 'Library/Messages/chat.db');
-const RECS = new URL('../data/recs.json', import.meta.url);
-const PEOPLE = new URL('../people.local.json', import.meta.url);
-
-const people = existsSync(PEOPLE) ? JSON.parse(readFileSync(PEOPLE, 'utf8')) : {};
-const recs = existsSync(RECS) ? JSON.parse(readFileSync(RECS, 'utf8')) : [];
-const byId = new Map(recs.map((r) => [r.id, r]));
 
 const sql = (q) => JSON.parse(execFileSync('sqlite3', ['-readonly', '-json', DB, q], { maxBuffer: 1 << 28 }).toString() || '[]');
 const esc = (s) => s.replace(/'/g, "''");
@@ -47,42 +35,14 @@ const messages = sql(`
 
 // Newer messages keep their text only in the attributedBody blob.
 const textOf = (m) => m.text || (m.body ? Buffer.from(m.body, 'hex').toString('latin1') : '');
-const URL_RE = /https?:\/\/[^\s"'<>\u0000-\u001f\u0080-ÿ]+/g;
 
-let added = 0;
-for (const m of messages) {
-  const urls = new Set((textOf(m).match(URL_RE) || []).map(normalizeUrl).filter(Boolean));
-  for (const url of urls) {
-    const kind = classify(url);
-    if (!kind) continue;
-    const id = recId(url);
-    const existing = byId.get(id);
-    const sharedBy = m.me ? people.me : people[m.handle];
-    if (existing && !args.refresh) {
-      existing.reactions = Math.max(existing.reactions || 0, m.reactions);
-      continue;
-    }
-    const meta = await enrich(url, kind).catch((e) => {
-      console.warn(`  ! ${url}: ${e.message}`);
-      return null;
-    });
-    if (!meta) continue; // e.g. an X post with no video isn't a clip
-    const rec = {
-      id,
-      url,
-      sharedAt: new Date(m.ts * 1000).toISOString(),
-      ...(sharedBy && { sharedBy }),
-      reactions: m.reactions,
-      source: chatName,
-      ...existing,
-      ...meta,
-    };
-    byId.set(id, rec);
-    if (!existing) added++;
-    console.log(`+ [${rec.kind}] ${rec.title}`);
-  }
-}
+const shares = messages.flatMap((m) =>
+  [...new Set(textOf(m).match(URL_RE) || [])].map((url) => ({
+    url,
+    sharedAt: new Date(m.ts * 1000).toISOString(),
+    sharedBy: m.me ? people.me : people[m.handle],
+    reactions: m.reactions,
+  })),
+);
 
-const out = [...byId.values()].sort((a, b) => b.sharedAt.localeCompare(a.sharedAt));
-writeFileSync(RECS, JSON.stringify(out, null, 2) + '\n');
-console.log(`\n${added} new, ${out.length} total → data/recs.json`);
+await ingest(shares, { source: chatName, refresh: !!args.refresh });
