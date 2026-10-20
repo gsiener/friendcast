@@ -6,6 +6,7 @@ const params = new URLSearchParams(location.search);
 const state = {
   kind: params.get('kind') || 'all',
   q: params.get('q') || '',
+  topic: params.get('topic') || '',
   open: new Set((params.get('open') || '').split(',').filter(Boolean)),
 };
 
@@ -18,29 +19,30 @@ function matches(card) {
 
 function render() {
   const searching = !!state.q;
-  $('#latest').hidden = searching || !$$('#latest .card').some(matches);
+  $('#latest').hidden = searching || !!state.topic || !$$('#latest .card').some(matches);
   $$('#latest .card').forEach((c) => (c.hidden = !matches(c)));
 
   let any = false;
   for (const s of $$('section.topic')) {
     const hits = $$('.card', s).filter(matches);
-    const open = searching || state.open.has(s.id);
+    const open = searching || state.topic === s.id || state.open.has(s.id);
     $$('.card', s).forEach((c) => (c.hidden = true));
     hits.forEach((c, i) => (c.hidden = !open && i >= PREVIEW));
-    s.hidden = !hits.length;
-    any ||= hits.length > 0;
+    s.hidden = !hits.length || (!!state.topic && state.topic !== s.id);
+    any ||= !s.hidden;
     const more = $('.more', s);
-    more.hidden = searching || hits.length <= PREVIEW;
+    more.hidden = searching || !!state.topic || hits.length <= PREVIEW;
     more.textContent = open ? 'Show fewer' : 'Show all ' + hits.length;
     more.setAttribute('aria-expanded', open);
   }
   $('.empty').hidden = any;
-  $$('.topics a').forEach((a) => (a.hidden = $(a.getAttribute('href')).hidden));
+  $('#topic').value = state.topic;
   $$('.chip').forEach((c) => c.setAttribute('aria-pressed', c.dataset.filter === state.kind));
 
   const p = new URLSearchParams();
   if (state.kind !== 'all') p.set('kind', state.kind);
   if (state.q) p.set('q', state.q);
+  if (state.topic) p.set('topic', state.topic);
   if (state.open.size) p.set('open', [...state.open].join(','));
   history.replaceState(null, '', (p.size ? '?' + p : location.pathname) + location.hash);
 }
@@ -57,6 +59,12 @@ q.addEventListener('input', () => {
   render();
 });
 
+$('#topic').addEventListener('change', (e) => {
+  state.topic = e.target.value;
+  render();
+  scrollTo({ top: $('.controls').offsetTop });
+});
+
 $$('.more').forEach((b) => b.addEventListener('click', () => {
   const s = b.closest('section');
   state.open.has(s.id) ? state.open.delete(s.id) : state.open.add(s.id);
@@ -64,10 +72,19 @@ $$('.more').forEach((b) => b.addEventListener('click', () => {
   if (!state.open.has(s.id)) s.scrollIntoView({ block: 'start' });
 }));
 
-$('#copy').addEventListener('click', async (e) => {
-  try { await navigator.clipboard.writeText(e.target.dataset.url); e.target.textContent = 'Copied!'; }
-  catch { location.href = e.target.dataset.url; }
-});
+$$('.copy').forEach((b) => b.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(b.dataset.url);
+    b.textContent = 'Copied';
+    setTimeout(() => (b.textContent = 'Copy URL'), 1500);
+  } catch {
+    location.href = b.dataset.url;
+  }
+}));
+// Close the subscribe menu on outside click or Escape.
+const menu = $('.subscribe');
+document.addEventListener('click', (e) => menu.open && !menu.contains(e.target) && (menu.open = false));
+document.addEventListener('keydown', (e) => e.key === 'Escape' && (menu.open = false));
 
 // ── Player ─────────────────────────────────────────────────────────
 

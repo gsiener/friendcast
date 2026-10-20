@@ -160,28 +160,34 @@ ${FEEDS.map((f) => `<link rel="alternate" type="application/rss+xml" title="${es
 <body>
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">🏃 friend recs</p>
-    <h1>${TITLE}</h1>
-    <p class="tagline">${esc(TAGLINE)} <span class="sources">From ${esc(list(sources))}.</span></p>
-    <div class="subscribe">
-      <a class="btn primary" href="/feed.xml">Subscribe via RSS</a>
-      <a class="btn" href="/podcasts.xml">Podcasts only</a>
-      <button class="btn" id="copy" data-url="${SITE}/feed.xml">Copy feed URL</button>
+    <div>
+      <h1>${TITLE}</h1>
+      <p class="tagline">${esc(TAGLINE)} From ${esc(list(sources))}.</p>
     </div>
+    <details class="subscribe">
+      <summary class="btn primary">Subscribe</summary>
+      <div class="menu">
+        <p>Paste a feed into any RSS reader. The podcast feed plays in podcast apps.</p>
+        <ul>
+          ${FEEDS.map((f) => `<li><a href="/${f.file}">${f.label}</a><button type="button" class="copy" data-url="${SITE}/${f.file}">Copy URL</button></li>`).join('\n          ')}
+        </ul>
+      </div>
+    </details>
   </div>
 </header>
 <div class="controls">
   <div class="wrap">
     <input type="search" id="q" placeholder="Search ${recs.length} recs" aria-label="Search recommendations" autocomplete="off">
-    <div class="chips" role="group" aria-label="Show">
-      ${FEEDS.map((f, i) => `<button type="button" class="chip" aria-pressed="${!i}" data-filter="${i ? f.kinds[0] : 'all'}">${f.label} <span>${counts[f.label]}</span></button>`).join('\n      ')}
+    <div class="chips" role="group" aria-label="Type">
+      ${FEEDS.map((f, i) => `<button type="button" class="chip" aria-pressed="${!i}" data-filter="${i ? f.kinds[0] : 'all'}">${i ? f.label : 'All'} <span>${counts[f.label]}</span></button>`).join('\n      ')}
     </div>
+    <select id="topic" aria-label="Topic">
+      <option value="">All topics</option>
+      ${sections.map((s) => `<option value="${s.slug}">${esc(s.name)} (${s.items.length})</option>`).join('\n      ')}
+    </select>
   </div>
 </div>
 <main class="wrap">
-  <nav class="topics" aria-label="Topics">
-    ${sections.map((s) => `<a href="#${s.slug}">${esc(s.name)} <span>${s.items.length}</span></a>`).join('\n    ')}
-  </nav>
   <section id="latest" class="latest">
     <h2>Latest</h2>
     <p class="blurb">The most recent shares from every group.</p>
@@ -197,7 +203,7 @@ ${s.items.map(card).join('\n')}
     </ul>
     <button class="more" type="button" hidden>Show all</button>
   </section>`).join('\n')}
-  <p class="empty" hidden>Nothing matches that search. Try a show, a person, or a topic like “agents”.</p>
+  <p class="empty" hidden>Nothing matches. Try another search, type, or topic.</p>
 </main>
 <footer class="wrap">
   <p>Feeds: ${FEEDS.map((f) => `<a href="/${f.file}">${f.file}</a>`).join(' · ')}</p>
