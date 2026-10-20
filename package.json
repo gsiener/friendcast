@@ -1,0 +1,15 @@
+{
+  "name": "friendcast",
+  "private": true,
+  "type": "module",
+  "description": "RSS feed + landing page of podcast, video, and clip recs from friends",
+  "scripts": {
+    "import": "node scripts/import-imessage.mjs --chat Frontier Pacers",
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.3"
+  }
+}
