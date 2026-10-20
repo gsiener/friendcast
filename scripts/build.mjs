@@ -162,7 +162,7 @@ ${FEEDS.map((f) => `<link rel="alternate" type="application/rss+xml" title="${es
   <div class="wrap">
     <div>
       <h1>${TITLE}</h1>
-      <p class="tagline">${esc(TAGLINE)} From ${esc(list(sources))}.</p>
+      <p class="tagline">${esc(TAGLINE)}</p>
     </div>
     <details class="subscribe">
       <summary class="btn primary">Subscribe</summary>
