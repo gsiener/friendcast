@@ -20,21 +20,15 @@ const FEEDS = [
   { file: 'clips.xml', label: 'Clips', kinds: ['clip'] },
 ];
 const KIND_LABEL = { podcast: 'Podcast', video: 'Video', clip: 'Clip' };
-const PACE = 330; // seconds per km: an easy 5:30/km
 
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const duration = (sec) => {
   if (!sec) return '';
   const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
-  return h ? `${h} hr ${m} min` : m >= 10 ? `${m} min` : `${m}:${String(s).padStart(2, '0')}`;
+  return h ? `${h}h ${m}m` : m >= 10 ? `${m} min` : `${m}:${String(s).padStart(2, '0')}`;
 };
-const distance = (sec) => {
-  if (!sec) return null;
-  const km = sec / PACE;
-  return km < 1 ? { n: Math.max(50, Math.round((km * 1000) / 50) * 50), unit: 'm' } : { n: km.toFixed(1), unit: 'km' };
-};
-const day = (iso) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const day = (iso) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 const list = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
 
 // ── RSS ──────────────────────────────────────────────────────────────
@@ -87,30 +81,28 @@ const sections = [
   ...themes.map((t) => ({ ...t, items: recs.filter((r) => r.theme === t.slug) })),
 ].filter((s) => s.items.length);
 
-function row(r) {
-  const d = distance(r.durationSec);
-  return `<li class="rec" data-kind="${r.kind}">
+function card(r) {
+  const meta = [r.show, duration(r.durationSec)].filter(Boolean).map(esc).join(' · ');
+  return `<li class="card" data-kind="${r.kind}">
   <a href="${esc(r.url)}" target="_blank" rel="noopener">
-    <span class="thumb">${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy">` : ''}</span>
-    <span class="what">
-      <span class="kind ${r.kind}">${KIND_LABEL[r.kind]}</span>
-      <span class="title">${esc(r.title)}</span>
-      <span class="by">${esc(r.show || r.platform)}</span>
-      <span class="when">${r.sharedBy ? `${esc(r.sharedBy)}, ` : ''}${day(r.sharedAt)}${r.reactions ? `<span class="hearts" title="${r.reactions} ${r.reactions === 1 ? 'reaction' : 'reactions'} in the chat">♥ ${r.reactions}</span>` : ''}</span>
-    </span>
-    ${d ? `<span class="dist" title="${duration(r.durationSec)} at 5:30/km"><b>${d.n}</b><small>${d.unit}</small><span>${duration(r.durationSec)}</span></span>` : '<span class="dist none"></span>'}
+    <div class="thumb ${r.kind}">${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy">` : ''}<span class="badge">${KIND_LABEL[r.kind]}</span></div>
+    <div class="body">
+      <h3>${esc(r.title)}</h3>
+      ${meta ? `<p class="meta">${meta}</p>` : ''}
+      <p class="foot"><span>${esc(r.platform)}</span><span>${r.sharedBy ? `${esc(r.sharedBy)} · ` : ''}${day(r.sharedAt)}${r.reactions ? ` · <span class="hearts" title="${r.reactions} reactions">♥ ${r.reactions}</span>` : ''}</span></p>
+    </div>
   </a>
 </li>`;
 }
 
-const totalKm = Math.round(recs.reduce((s, r) => s + (r.durationSec || 0), 0) / PACE);
+const counts = Object.fromEntries(FEEDS.map((f) => [f.label, recs.filter((r) => f.kinds.includes(r.kind)).length]));
 
 const page = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${TITLE}</title>
+<title>${TITLE} · Friend Recs</title>
 <meta name="description" content="${esc(TAGLINE)}">
 <meta property="og:title" content="${TITLE}">
 <meta property="og:description" content="${esc(TAGLINE)}">
@@ -118,60 +110,52 @@ const page = `<!doctype html>
 ${FEEDS.map((f) => `<link rel="alternate" type="application/rss+xml" title="${esc(`${TITLE}: ${f.label}`)}" href="/${f.file}">`).join('\n')}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<header class="track">
+<header class="hero">
   <div class="wrap">
+    <p class="eyebrow">🏃 friend recs</p>
     <h1>${TITLE}</h1>
-    <p class="lede">${esc(TAGLINE)} Pulled from ${esc(list(sources))}, sorted by topic, and measured in how far you’d run before each one ends.</p>
-    <div class="actions">
-      <a class="btn go" href="/feed.xml">Subscribe to everything</a>
+    <p class="tagline">${esc(TAGLINE)}</p>
+    <p class="sources">From ${esc(list(sources))}.</p>
+    <div class="subscribe">
+      <a class="btn primary" href="/feed.xml">Subscribe via RSS</a>
       <a class="btn" href="/podcasts.xml">Podcasts only</a>
-      <button class="btn" type="button" id="copy" data-url="${SITE}/feed.xml">Copy feed URL</button>
+      <button class="btn" id="copy" data-url="${SITE}/feed.xml">Copy feed URL</button>
     </div>
   </div>
-  <nav class="lanes" aria-label="Topics">
-    ${sections.map((s) => `<a class="lane" href="#${s.slug}"><span class="wrap"><span>${esc(s.name)}</span><span class="count">${s.items.length}</span></span></a>`).join('\n    ')}
-  </nav>
 </header>
-
-<div class="bar">
-  <div class="wrap">
-    <div class="filters" role="group" aria-label="Show">
-      ${FEEDS.map((f, i) => `<button type="button" class="chip" aria-pressed="${!i}" data-filter="${i ? f.kinds[0] : 'all'}">${f.label}</button>`).join('\n      ')}
-    </div>
-    <p class="pace">${recs.length} recs, about ${totalKm} km of listening at 5:30/km</p>
-  </div>
-</div>
-
 <main class="wrap">
+  <nav class="topics" aria-label="Topics">
+    ${sections.map((s) => `<a href="#${s.slug}">${esc(s.name)} <span>${s.items.length}</span></a>`).join('\n    ')}
+  </nav>
+  <nav class="filters" aria-label="Filter recommendations">
+    ${FEEDS.map((f, i) => `<button class="chip${i ? '' : ' on'}" data-filter="${i ? f.kinds[0] : 'all'}">${f.label} <span>${counts[f.label]}</span></button>`).join('\n    ')}
+  </nav>
 ${sections.map((s) => `  <section id="${s.slug}">
-    <header><h2>${esc(s.name)}</h2><p>${esc(s.blurb)}</p></header>
-    <ol>
-${s.items.map(row).join('\n')}
-    </ol>
+    <h2>${esc(s.name)}</h2>
+    <p class="blurb">${esc(s.blurb)}</p>
+    <ul class="grid">
+${s.items.map(card).join('\n')}
+    </ul>
   </section>`).join('\n')}
 </main>
-
 <footer class="wrap">
-  <p>Every list is also an RSS feed: ${FEEDS.map((f) => `<a href="/${f.file}">${f.label.toLowerCase()}</a>`).join(', ')}. Podcast episodes include audio, so the podcasts feed plays in any podcast app.</p>
-  <p><a href="https://github.com/gsiener/friendcast">Source on GitHub</a></p>
+  <p>Feeds: ${FEEDS.map((f) => `<a href="/${f.file}">${f.file}</a>`).join(' · ')}</p>
+  <p>Updated ${day(new Date().toISOString())} · ${recs.length} recommendations · <a href="https://github.com/gsiener/friendcast">Source</a></p>
 </footer>
 <script>
-const chips = document.querySelectorAll('.chip');
-chips.forEach((chip) => chip.addEventListener('click', () => {
-  chips.forEach((c) => c.setAttribute('aria-pressed', c === chip));
+document.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c === chip));
   const f = chip.dataset.filter;
-  document.querySelectorAll('.rec').forEach((r) => (r.hidden = f !== 'all' && r.dataset.kind !== f));
-  document.querySelectorAll('main section').forEach((s) => (s.hidden = !s.querySelector('.rec:not([hidden])')));
+  document.querySelectorAll('.card').forEach((c) => (c.hidden = f !== 'all' && c.dataset.kind !== f));
+  document.querySelectorAll('main section').forEach((s) => (s.hidden = !s.querySelector('.card:not([hidden])')));
 }));
 document.getElementById('copy').addEventListener('click', async (e) => {
-  const b = e.currentTarget;
-  try { await navigator.clipboard.writeText(b.dataset.url); b.textContent = 'Feed URL copied'; }
-  catch { location.href = b.dataset.url; }
+  try { await navigator.clipboard.writeText(e.target.dataset.url); e.target.textContent = 'Copied!'; }
+  catch { location.href = e.target.dataset.url; }
 });
 </script>
 </body>
