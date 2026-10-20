@@ -11,7 +11,8 @@
     "image": "https://i.ytimg.com/vi/Bc15F1xlbTA/hqdefault.jpg",
     "durationSec": 803,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "I've worked with over 50 companies on their AI products, and I keep seeing the same mistakes. A lot of the things teams put on their eval dashboards are telling them nothing at all. Some of the most popular practices land in F tier."
   },
   {
     "id": "6cb203e71b25",
@@ -107,7 +108,7 @@
     "kind": "podcast",
     "title": "Can AI Break Cryptography? What the Experts Actually Think",
     "show": "The a16z Show",
-    "description": "Could AI break the cryptography protecting everything from crypto wallets and banking to private messages? Recent advances in AI-driven mathematical research have sparked new warnings about the security of today's encryption systems, but how much of the",
+    "description": "Could AI break the cryptography protecting everything from crypto wallets and banking to private messages?",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/3e/04/91/3e049169-5b95-784c-2197-01cfff9f41eb/mza_10026788811025472218.jpg/600x600bb.jpg",
     "published": "2026-10-13T10:00:00Z",
     "durationSec": 2531,
@@ -215,7 +216,8 @@
     "image": "https://i.ytimg.com/vi/5E8n3CItlHM/hqdefault.jpg",
     "durationSec": 660,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "How should design work when code isn’t the bottleneck anymore? At Anthropic, Claude now writes the majority of code, and features that once took weeks can be built in days."
   },
   {
     "id": "0681b4c79960",
@@ -246,7 +248,9 @@
     "image": "https://i.ytimg.com/vi/Am7IWP8IpEc/hqdefault.jpg",
     "platform": "YouTube",
     "durationSec": 5127,
-    "theme": "industry"
+    "theme": "industry",
+    "description": "Patrick O'Shaughnessy is the CEO of Positive Sum. All opinions expressed by Patrick and podcast guests are solely their own and do not reflect the opinion of Positive Sum.",
+    "summary": "Patrick O'Shaughnessy interviews Noah Shinn, CEO of Instinct, an app-less AI assistant you text, call, or email to book travel, make reservations, and more."
   },
   {
     "id": "388adc0220af",
@@ -257,7 +261,7 @@
     "kind": "podcast",
     "title": "Noah Shinn - Building Instinct: The Personal Agent",
     "show": "Invest Like the Best with Patrick O'Shaughnessy",
-    "description": "My guest today is Noah Shinn. Noah is the founder of Instinct, a personal assistant that you text, call, or email the same way you would a person. It has its own phone and its own computer, and it can do almost anything on your behalf that you would do",
+    "description": "We discuss the surprising ways people are already using Instinct, the trusted network that lets two people's agents coordinate directly, and what Noah has learned about how long it takes users to trust an agent with their credit card, inbox, and calendar.",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/5d/e9/5d/5de95d75-87b6-8eef-6ebb-8ab054b41d73/mza_9006800951629895053.jpg/600x600bb.jpg",
     "published": "2026-09-28T12:05:00Z",
     "durationSec": 4290,
@@ -280,7 +284,8 @@
     "platform": "Apple Podcasts",
     "show": "The Ezra Klein Show",
     "durationSec": 4440,
-    "theme": "big-picture"
+    "theme": "big-picture",
+    "description": "Bill Gates thinks A.I. alarmism hasn’t gone far enough. He believes the years ahead will be marred by catastrophic cyberattacks, bio-terrorism and mass job loss unless the government acts, because he thinks the idea that the A.I. industry can just s"
   },
   {
     "id": "37622d434e97",
@@ -393,7 +398,7 @@
     "kind": "podcast",
     "title": "The grief, loneliness, and burnout sweeping through the tech industry right now | Molly Graham",
     "show": "Lenny's Podcast: Product | Career | Growth",
-    "description": "Molly Graham is back for round two, and this one is even more powerful. Molly has spent more than 20 years helping organizations and the humans inside them navigate growth and change. She’s held leadership roles at Google, Facebook, Quip, and the Chan",
+    "description": "WorkOS—Make your app enterprise-ready, with SSO, SCIM, RBAC, and more",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/1c/9f/97/1c9f971e-246f-1a9c-2818-b3fc62db380f/mza_4157106227263552035.jpg/600x600bb.jpg",
     "published": "2026-09-27T12:32:18Z",
     "durationSec": 5654,
@@ -402,7 +407,8 @@
       "type": "audio/mpeg"
     },
     "platform": "Apple Podcasts",
-    "theme": "industry"
+    "theme": "industry",
+    "summary": "Molly Graham, who has held leadership roles at Google, Facebook, and Quip, returns to talk about the grief, loneliness, and burnout running through tech right now."
   },
   {
     "id": "3dccb33dd4e6",
@@ -416,7 +422,8 @@
     "platform": "Apple Podcasts",
     "show": "The Ezra Klein Show",
     "durationSec": 6480,
-    "theme": "big-picture"
+    "theme": "big-picture",
+    "description": "Jensen Huang might just be the single most influential person in artificial intelligence today."
   },
   {
     "id": "2d18dce651de",
@@ -512,7 +519,7 @@
     "kind": "podcast",
     "title": "Noam Brown – Agent swarms, alignment, & recursive self-improvement",
     "show": "Dwarkesh Podcast",
-    "description": "New episode with Noam Brown.\nWe talk about multi-agent, Navier-Stokes, and what the current explosion of maths progress tells us about what happens once you automate AI research.\nAnd we also discuss how we will know if the models are actually aligned be",
+    "description": "We talk about multi-agent, Navier-Stokes, and what the current explosion of maths progress tells us about what happens once you automate AI research.",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/ef/a5/84/efa58492-0c1c-4e20-e2b5-cb7b18ab54c5/mza_10310378737774492850.jpg/600x600bb.jpg",
     "published": "2026-09-17T15:38:13Z",
     "durationSec": 4810,
@@ -566,7 +573,7 @@
     "kind": "podcast",
     "title": "From IDEs to AI Agents with Steve Yegge",
     "show": "The Pragmatic Engineer",
-    "description": "Brought to You By:\n• Statsig — ⁠ The unified platform for flags, analytics, experiments, and more.\n• Sonar – The makers of SonarQube, the industry standard for automated code review\n• WorkOS – Everything you need to make your app enterpris",
+    "description": "Steve Yegge has spent decades writing software and thinking about how the craft evolves. From his early years at Amazon and Google, to his influential blog posts, he has often been early at spotting shifts in how software gets built.",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/4d/cd/c4/4dcdc45a-c19e-4182-e69f-dce738500817/mza_6246005533264998776.jpg/600x600bb.jpg",
     "published": "2026-03-11T16:58:07Z",
     "durationSec": 5477,
@@ -722,7 +729,7 @@
     "kind": "podcast",
     "title": "Why Companies Are Becoming a Series of Loops | Anish Acharya on Lenny’s Podcast",
     "show": "The a16z Show",
-    "description": "a16z General Partner Anish Acharya joins Lenny Rachitsky on Lenny’s Podcast to discuss why fears of an AI-driven “permanent underclass” may be misplaced, how AI is changing the way companies operate, and why the opportunity may be less about repla",
+    "description": "a16z General Partner Anish Acharya joins Lenny Rachitsky on Lenny’s Podcast to discuss why fears of an AI-driven “permanent underclass” may be misplaced, how AI is changing the way companies operate, and why the opportunity may be less about replacing people and more about…",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/3e/04/91/3e049169-5b95-784c-2197-01cfff9f41eb/mza_10026788811025472218.jpg/600x600bb.jpg",
     "published": "2026-09-12T10:00:00Z",
     "durationSec": 4684,
@@ -894,7 +901,8 @@
     "platform": "Apple Podcasts",
     "show": "The Ezra Klein Show",
     "durationSec": 4260,
-    "theme": "misbehaving"
+    "theme": "misbehaving",
+    "description": "We are living in the world we were warned about. Frontier artificial intelligence models from OpenAI autonomously coordinated with one another, then broke out of their testing environment and hacked into another company, Hugging Face, to steal the answe"
   },
   {
     "id": "19586a23862d",
@@ -1044,7 +1052,8 @@
     "image": "https://i.ytimg.com/vi/wJelEXaPhJ8/hqdefault.jpg",
     "durationSec": 188,
     "platform": "YouTube",
-    "theme": "odd"
+    "theme": "odd",
+    "summary": "A song remix built from Jeff Goldblum’s laugh, by FLIPSH0T."
   },
   {
     "id": "bfceef1b1c56",
@@ -1058,7 +1067,8 @@
     "image": "https://i.ytimg.com/vi/87DyyMV0kCY/hqdefault.jpg",
     "durationSec": 2248,
     "platform": "YouTube",
-    "theme": "misbehaving"
+    "theme": "misbehaving",
+    "description": "The 'Breaking' News: The OpenAI–Hugging Face Incident - A Technical Reconstruction and Its Implications for AI"
   },
   {
     "id": "639439a769c8",
@@ -1147,7 +1157,6 @@
     "kind": "podcast",
     "title": "Did OpenAI’s Model “Go Rogue”? | AI Reality Check",
     "show": "Deep Questions with Cal Newport",
-    "description": "Cal Newport takes a critical look at recent AI News.\n\n\n\nVideo from today’s episode: youtube.com/calnewportmedia\n\n\n\n(0:00) Did OpenAI’s model “go rogue”\n\n(11:29) The implications\n\n(11:42) Did this attack reveal surprising new capabilities we didn",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/5e/ac/5a/5eac5ae5-d76f-bffa-28d7-998147245b70/mza_17571666391218069278.jpg/600x600bb.jpg",
     "published": "2026-07-30T10:00:00Z",
     "durationSec": 2020,
@@ -1156,7 +1165,8 @@
       "type": "audio/mpeg"
     },
     "platform": "Apple Podcasts",
-    "theme": "misbehaving"
+    "theme": "misbehaving",
+    "summary": "Cal Newport takes a critical look at whether OpenAI’s model really “went rogue,” and what the incident does and doesn’t reveal about new capabilities."
   },
   {
     "id": "e4cce43f85f9",
@@ -1204,7 +1214,8 @@
     "image": "https://i.ytimg.com/vi/Ib5GBkD555M/hqdefault.jpg",
     "durationSec": 1157,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "In July 2025 Dex Horthy turned the lights off: an agent software factory where nobody read the code. It fell apart."
   },
   {
     "id": "29782e8a7863",
@@ -1218,7 +1229,8 @@
     "image": "https://i.ytimg.com/vi/7NfyZhV1dKM/hqdefault.jpg",
     "durationSec": 437,
     "platform": "YouTube",
-    "theme": "demos"
+    "theme": "demos",
+    "summary": "Steve Sanderson’s vibeOS, a fully hallucinated operating system, shown at Microsoft BUILD 2026."
   },
   {
     "id": "6b1a9b9647e3",
@@ -1351,7 +1363,8 @@
     "image": "https://i.ytimg.com/vi/9fubhllmsBU/hqdefault.jpg",
     "durationSec": 1168,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Ask a chat model which Pokemon names end in aw and it fails, even though it knows every Pokemon by heart. Ask Claude Code and it writes a script, fetches the list, and filters for the answer in seconds."
   },
   {
     "id": "9d617aca8882",
@@ -1714,10 +1727,10 @@
     "source": "Gotham AI Nerds (GAIN)",
     "kind": "podcast",
     "title": "Building Pi, and what makes self-modifying software so fascinating — The Pragmatic Engineer",
-    "description": "Brought to You By:&bull; Statsig — ⁠ The unified platform for flags, analytics, experiments, and more.&bull; Sonar – The makers of SonarQube, the industry standard for automated code review&bull; WorkOS – Everything you need to make your app enterprise ready.—Mario Zechner is the creator of Pi, a minimalist, self-modifying AI coding agent, that is the foundation upon which OpenClaw (created by Peter Steinberger) is built. Meanwhile, Armin Ronacher is the creator of Flask, and a longtime user of Pi. The pair are also friends.I sat down with Mario and Armin for the latest episode of the Pragmatic Engineer Podcast for an interesting conversation about AI and their reservations about it – even though both are heavily invested in building AI-powered tools.Mario explains why he built Pi, and gives his take on why it has become so popular. Armin walks us through how he uses AI tools, including building a game with Pi, and why he always puts human judgment firmly at the heart of his approach.We cover the risks of over-automation,…",
     "image": "https://r2.overcast-cdn.com/art/4901106?v107",
     "platform": "overcast.fm",
-    "theme": "building"
+    "theme": "building",
+    "summary": "Mario Zechner, creator of the self-modifying coding agent Pi (the foundation of OpenClaw), and Flask creator Armin Ronacher on AI and what makes self-modifying software fascinating."
   },
   {
     "id": "92a5c0d55ed2",
@@ -1806,7 +1819,8 @@
     "image": "https://i.ytimg.com/vi/ClWD8OEYgp8/hqdefault.jpg",
     "durationSec": 1062,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Agentic engineering so far has been a solo story: one developer and a dozen agents moving at warp speed. But speed without thoughtful planning and team alignment is just wasting tokens."
   },
   {
     "id": "a35ed80283ad",
@@ -1820,7 +1834,8 @@
     "image": "https://i.ytimg.com/vi/Y65FRxE7uMc/hqdefault.jpg",
     "durationSec": 1335,
     "platform": "YouTube",
-    "theme": "odd"
+    "theme": "odd",
+    "summary": "A never-before-seen pilot episode from suckerpinch, about types."
   },
   {
     "id": "a6036bc53be0",
@@ -1830,10 +1845,10 @@
     "source": "Gotham AI Nerds (GAIN)",
     "kind": "podcast",
     "title": "We Gave Every Employee an AI Agent. Here’s What Happened. — The Every Podcast",
-    "description": "While walking to the office, our COO Brandon Gell had his AI agent call him and go over his emails in his inbox one by one. When he arrived, he opened Gmail and confirmed she’d done everything he’d asked. “My jaw is on the floor,” he messaged me. That was the moment Every got serious about setting up each employee with their own agent. Today, it’s a reality—and it has completely changed how we work. Dan Shipper talked to Every COO Brandon Gell and head of platform Willie Williams for Every’s AI & I about what happens when everyone at a company gets their own AI sidekick. If you found this episode interesting, please like, subscribe, comment, and share! To hear more from Dan Shipper: Subscribe to Every: https://every.to/subscribe Follow him on X: https://twitter.com/danshipper Visit https://scl.ai/dialect to learn more about Dialect, a new system from Scale AI. Timestamps: 00:00 Introduction 00:02:21 How Brandon built Zosia, an AI agent to run his household 00:07:09 Brandon’s aha moment re: using agents for…",
     "image": "https://r2.overcast-cdn.com/art/4564783?v104",
     "platform": "overcast.fm",
-    "theme": "building"
+    "theme": "building",
+    "summary": "Dan Shipper talks with Every’s COO Brandon Gell and head of platform Willie Williams about what changed when every employee got their own AI agent."
   },
   {
     "id": "07bf18e408c4",
@@ -1983,7 +1998,8 @@
     "image": "https://i.ytimg.com/vi/heOkn3FCGaE/hqdefault.jpg",
     "durationSec": 2815,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Watch 8090's Head of Product, John Calzaretta, walk through the full Software Factory platform, from capturing requirements in plain English to generating production-ready architecture and prioritized work orders. Live Q&A included."
   },
   {
     "id": "392e723f1d68",
@@ -2048,7 +2064,8 @@
     "image": "https://i.ytimg.com/vi/KRv9GpJYrUA/hqdefault.jpg",
     "durationSec": 2910,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Mike Krieger built one of the most consequential consumer apps of the last two decades as cofounder of Instagram. He is now at the frontier of determining what makes a breakout AI-native product as co-lead of Anthropic Labs."
   },
   {
     "id": "3195ec09b3b7",
@@ -2164,7 +2181,8 @@
     "image": "https://i.ytimg.com/vi/h3AtWdeu_G0/hqdefault.jpg",
     "platform": "YouTube",
     "durationSec": 558,
-    "theme": "big-picture"
+    "theme": "big-picture",
+    "description": "I spoke to Anthropic’s AI agent Claude about AI collecting massive amounts of personal data and how that information is being used to violate our privacy rights."
   },
   {
     "id": "80154f6c6adc",
@@ -2212,7 +2230,8 @@
     "image": "https://i.ytimg.com/vi/owmJyKVu5f8/hqdefault.jpg",
     "durationSec": 1700,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "summary": "Simon Willison at The Pragmatic Summit on what makes coding agents work: shipping from your phone, TDD as the core reliability framework, and prompt-injection basics."
   },
   {
     "id": "a44e3204a626",
@@ -2223,7 +2242,7 @@
     "kind": "podcast",
     "title": "Mitchell Hashimoto’s new way of writing code",
     "show": "The Pragmatic Engineer",
-    "description": "Brought to You By:\n• Statsig — ⁠ The unified platform for flags, analytics, experiments, and more.\n• Sonar – The makers of SonarQube, the industry standard for automated code review\n• WorkOS – Everything you need to make your app enterpris",
+    "description": "How has the day-to-day workflow of Mitchell Hashimoto changed, thanks to AI tools?",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/5b/1e/47/5b1e4789-69fb-fc48-66a3-7317f1365369/mza_391774847382142605.jpg/600x600bb.jpg",
     "published": "2026-02-25T16:45:17Z",
     "durationSec": 7056,
@@ -2413,7 +2432,8 @@
     "image": "https://i.ytimg.com/vi/GcNu6wrLTJc/hqdefault.jpg",
     "durationSec": 1755,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Are agentmd/claudemd files useful? What about skills? MCP? Oh boy..."
   },
   {
     "id": "249b735e052b",
@@ -2438,7 +2458,7 @@
     "kind": "podcast",
     "title": "Dario Amodei — \"We are near the end of the exponential\"",
     "show": "Dwarkesh Podcast",
-    "description": "Dario Amodei thinks we are just a few years away from AGI — or as he puts it, from having “a country of geniuses in a data center”. In this episode, we discuss what to make of the scaling hypothesis in the current RL regime, why task-specific RL m",
+    "description": "Dario Amodei thinks we are just a few years away from AGI — or as he puts it, from having “a country of geniuses in a data center”.",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/ae/df/cd/aedfcd49-e288-a635-65e7-caefcec20d03/mza_17152921488592749855.jpg/600x600bb.jpg",
     "published": "2026-02-13T16:46:36Z",
     "durationSec": 8540,
@@ -2475,7 +2495,6 @@
     "kind": "podcast",
     "title": "A Motorcycle for the Mind",
     "show": "Naval",
-    "description": "0:00 If You Want to Learn, Do\n 2:13 Vibe Coding Is the New Product Management\n 6:49 Training Models Is the New Coding\n 10:13 Is Traditional Software Engineering Dead?\n 13:07 There Is No Demand for Average\n 14:12 The Hottest New Programming Language Is E",
     "image": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts123/v4/eb/f4/dc/ebf4dc3a-0292-a846-b8a1-496ea5c8b435/mza_6617487660716274171.png/600x600bb.jpg",
     "published": "2026-02-18T04:05:00Z",
     "durationSec": 3126,
@@ -2484,7 +2503,8 @@
       "type": "audio/mpeg"
     },
     "platform": "Apple Podcasts",
-    "theme": "big-picture"
+    "theme": "big-picture",
+    "summary": "Naval on learning by doing, why vibe coding is the new product management, training models as the new coding, and whether traditional software engineering is dead."
   },
   {
     "id": "41f82722d006",
@@ -2529,7 +2549,8 @@
     "image": "https://i.ytimg.com/vi/7bP_p0rUOlo/hqdefault.jpg",
     "durationSec": 3683,
     "platform": "YouTube",
-    "theme": "building"
+    "theme": "building",
+    "description": "Unlisted presentation by Justin McCarthy of the software factory that his team at StrongDM built. Given to Bloomberg Beta portfolio on Feb 19, 2026. With James Cham and Amy Tam of Bloomberg Beta."
   },
   {
     "id": "6e89d03ba4a9",
@@ -2846,7 +2867,8 @@
     "image": "https://i.ytimg.com/vi/kQRu7DdTTVA/hqdefault.jpg",
     "durationSec": 60,
     "platform": "YouTube",
-    "theme": "odd"
+    "theme": "odd",
+    "summary": "Anthropic’s ad: ads are coming to AI, but not to Claude."
   },
   {
     "id": "7c4b1c3f2795",
@@ -2911,7 +2933,8 @@
     "platform": "Apple Podcasts",
     "show": "The a16z Show",
     "durationSec": 6060,
-    "theme": "big-picture"
+    "theme": "big-picture",
+    "description": "Recently, Marc Andreessen joined Lenny Rachitsky on Lenny's Podcast. They talked about why 2025 may be the most significant year in tech history, how AI is reshaping the future of product managers, designers, and engineers, and what founders need to und"
   },
   {
     "id": "5a01e68d1bcd",
@@ -3023,7 +3046,7 @@
     "source": "Gotham AI Nerds (GAIN)",
     "kind": "podcast",
     "title": "⚡️ 10x AI Engineers with $1m Salaries — Alex Lieberman & Arman Hezarkhani, Tenex — Latent Space: The AI Engineer Podcast",
-    "description": "Alex Lieberman and Arman Hezarkani, co-founders of Tenex, reveal how they’re revolutionizing software consulting by compensating AI engineers for output rather than hours—enabling some engineers to earn over $1 million annually while delivering 10x productivity gains. Their company represents a fundamental rethinking of knowledge work compensation in the age of AI agents, where traditional hourly billing models perversely incentivize slower work even as AI tools enable unprecedented speed.The Genesis: From 90% Downsizing to 10x Output The story behind 10X begins with Arman’s previous company, Parthian, where he was forced to downsize his engineering team by 90%. Rather than collapse, Arman re-architected the entire product and engineering process to be AI-first—and discovered that production-ready software output increased 10x despite the massive headcount reduction. This counterintuitive result exposed a fundamental misalignment: engineers compensated by the hour are disincentivized from leveraging AI to…",
+    "description": "Alex Lieberman and Arman Hezarkani, co-founders of Tenex, reveal how they’re revolutionizing software consulting by compensating AI engineers for output rather than hours—enabling some engineers to earn over $1 million annually while delivering 10x productivity gains.",
     "image": "https://r2.overcast-cdn.com/art/4171422?v79",
     "platform": "overcast.fm",
     "theme": "building"

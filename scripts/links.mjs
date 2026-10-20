@@ -68,13 +68,16 @@ async function applePodcast(url) {
     const og = await openGraph(url, 'podcast');
     const parts = og?.description?.split(' · ') ?? [];
     const [, h, m] = parts.at(-1)?.match(/^(?:(\d+)h)?\s*(?:(\d+)m)?$/) ?? [];
-    return og && { ...og, description: undefined, show: parts[1], durationSec: (h || m) ? (h || 0) * 3600 + (m || 0) * 60 : undefined, platform: 'Apple Podcasts' };
+    // The page's embedded JSON carries the real episode description.
+    const page = await (await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0' } })).text().catch(() => '');
+    const description = summarize(jsonString(page, 'description'));
+    return og && { ...og, description, show: parts[1], durationSec: (h || m) ? (h || 0) * 3600 + (m || 0) * 60 : undefined, platform: 'Apple Podcasts' };
   }
   return {
     kind: 'podcast',
     title: e.trackName,
     show: e.collectionName,
-    description: e.shortDescription || e.description?.slice(0, 400),
+    description: summarize(e.description || e.shortDescription),
     image: e.artworkUrl600,
     published: e.releaseDate,
     durationSec: e.trackTimeMillis ? Math.round(e.trackTimeMillis / 1000) : undefined,
@@ -87,7 +90,8 @@ async function youtube(url, kind) {
   const o = await json(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`);
   const page = await (await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0' } })).text().catch(() => '');
   const sec = Number(page.match(/"lengthSeconds":"(\d+)"/)?.[1]) || undefined;
-  return { kind, title: o.title, show: o.author_name, image: o.thumbnail_url, durationSec: sec, platform: 'YouTube' };
+  const description = summarize(jsonString(page, 'shortDescription'));
+  return { kind, title: o.title, show: o.author_name, image: o.thumbnail_url, description, durationSec: sec, platform: 'YouTube' };
 }
 
 async function xPost(url) {
@@ -127,13 +131,41 @@ async function openGraph(url, kind) {
     const caption = ig[2].replace(/#\S+/g, '').replace(/\s+/g, ' ').trim() || 'Instagram reel';
     return { kind, title: caption, show: ig[1], image: og('image') && decode(og('image')), platform: 'Instagram' };
   }
-  return { kind, title: decode(title), description: og('description') && decode(og('description')), image: og('image'), platform: og('site_name') || new URL(url).hostname };
+  return { kind, title: decode(title), description: summarize(og('description')), image: og('image'), platform: og('site_name') || new URL(url).hostname };
 }
 
 const decode = (s) =>
   s.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
-    .replace(/&(mdash|ndash|rsquo|lsquo|rdquo|ldquo|hellip|nbsp);/g, (_, n) => NAMED[n])
+    .replace(/&(bull|middot|mdash|ndash|rsquo|lsquo|rdquo|ldquo|hellip|nbsp);/g, (_, n) => NAMED[n])
     .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
-const NAMED = { mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', hellip: '…', nbsp: ' ' };
+// Sponsor reads, links, contact lines, and chapter lists aren't descriptions.
+const PROMO = /^([•·*\-–—#]|\d+[.)]\s)|ad choices|:\s*$|\bsponsor|brought to you|presented by|subscribe|newsletter|patreon|discord|cohort|promo code|use code|\binvites?\b|contact me|e-?mail|@\w|https?:|www\.|\d{1,2}:\d{2}|timestamps|chapters|comment section/i;
+
+const NAMED = { bull: '•', middot: '·', mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', hellip: '…', nbsp: ' ' };
+
+// First `"key":"…"` JSON string value embedded in a page, decoded.
+function jsonString(html, key) {
+  const m = html.match(new RegExp(`"${key}":"((?:[^"\\\\]|\\\\.)*)"`));
+  try {
+    return m ? JSON.parse(`"${m[1]}"`) : '';
+  } catch {
+    return '';
+  }
+}
+
+// A short description: first paragraph, cut to whole sentences within ~280 chars.
+export function summarize(text) {
+  if (!text) return undefined;
+  const para = decode(text.replace(/<(br|\/p|\/li)\s*\/?>/gi, '\n').replace(/<[^>]+>/g, ' '))
+    .split(/\n/).map((p) => p.trim()).find((p) => p.length > 60 && !PROMO.test(p)) || '';
+  const clean = para.replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= 280) return clean || undefined;
+  let out = '';
+  for (const sentence of clean.match(/[^.!?]+[.!?]+["”’)]?\s*/g) || []) {
+    if ((out + sentence).length > 280) break;
+    out += sentence;
+  }
+  return (out || `${clean.slice(0, 277).replace(/\s+\S*$/, '')}…`).trim();
+}

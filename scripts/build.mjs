@@ -58,7 +58,7 @@ function item(r) {
   const body = [
     r.image && `<p><img src="${esc(r.image)}" alt=""/></p>`,
     `<p><strong>${esc(KIND_LABEL[r.kind])}</strong>${r.show ? ` from ${esc(r.show)}` : ''}${r.durationSec ? `, ${duration(r.durationSec)}` : ''}</p>`,
-    r.description && `<p>${esc(r.description)}</p>`,
+    (r.summary || r.description) && `<p>${esc(r.summary || r.description)}</p>`,
     `<p>Shared${r.sharedBy ? ` by ${esc(r.sharedBy)}` : ''} in ${esc(r.source)}. <a href="${esc(r.url)}">Open on ${esc(r.platform)}</a></p>`,
   ].filter(Boolean).join('');
   return `  <item>
@@ -119,7 +119,7 @@ function card(r) {
     </div>
     <div class="body">
       <h3>${esc(r.title)}</h3>
-      ${r.description ? `<p class="desc">${esc(r.description)}</p>` : ''}
+      ${r.summary || r.description ? `<p class="desc">${esc(r.summary || r.description)}</p>` : ''}
       ${foot}
     </div>
   </a>
