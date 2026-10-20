@@ -140,6 +140,7 @@ ${sections.map((s) => `  <section id="${s.slug}">
     <ul class="grid">
 ${s.items.map(card).join('\n')}
     </ul>
+    <button class="more" type="button" hidden>Show all</button>
   </section>`).join('\n')}
 </main>
 <footer class="wrap">
@@ -147,12 +148,33 @@ ${s.items.map(card).join('\n')}
   <p>Updated ${day(new Date().toISOString())} · ${recs.length} recommendations · <a href="https://github.com/gsiener/friendcast">Source</a></p>
 </footer>
 <script>
+const PREVIEW = 6;
+let filter = 'all';
+function render() {
+  document.querySelectorAll('main section').forEach((s) => {
+    const open = s.classList.contains('open');
+    const matches = [...s.querySelectorAll('.card')].filter((c) => filter === 'all' || c.dataset.kind === filter);
+    s.querySelectorAll('.card').forEach((c) => (c.hidden = true));
+    matches.forEach((c, i) => (c.hidden = !open && i >= PREVIEW));
+    s.hidden = !matches.length;
+    const more = s.querySelector('.more');
+    more.hidden = matches.length <= PREVIEW;
+    more.textContent = open ? 'Show fewer' : 'Show all ' + matches.length;
+    more.setAttribute('aria-expanded', open);
+  });
+}
+document.querySelectorAll('.more').forEach((b) => b.addEventListener('click', () => {
+  const s = b.closest('section');
+  s.classList.toggle('open');
+  render();
+  if (!s.classList.contains('open')) s.scrollIntoView({ block: 'start' });
+}));
 document.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
   document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c === chip));
-  const f = chip.dataset.filter;
-  document.querySelectorAll('.card').forEach((c) => (c.hidden = f !== 'all' && c.dataset.kind !== f));
-  document.querySelectorAll('main section').forEach((s) => (s.hidden = !s.querySelector('.card:not([hidden])')));
+  filter = chip.dataset.filter;
+  render();
 }));
+render();
 document.getElementById('copy').addEventListener('click', async (e) => {
   try { await navigator.clipboard.writeText(e.target.dataset.url); e.target.textContent = 'Copied!'; }
   catch { location.href = e.target.dataset.url; }
